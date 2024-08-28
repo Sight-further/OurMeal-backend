@@ -3,7 +3,8 @@ import { UserDto } from "./dto/user.dto";
 import { DataService } from "./db/data.service";
 import { v4 as uuidv4 } from 'uuid';
 import { config } from "dotenv";import { SessionDto } from "./dto/session.dto";
- config();
+import * as bcrypt from "bcrypt";
+config();
 
 const env = process.env;
 @Injectable()
@@ -39,6 +40,7 @@ export class AuthService {
         const uidValidationCheck = await this.dataService.isAlreadyExists({ token: userDto.token });
 
         while (uidValidationCheck) { uid = await this.generateRandomString(80); }
+        const pw = await bcrypt.hash(userDto.pw as string, 10)
         await this.dataService.upsertOne(
             {
                 nickname: userDto
@@ -46,7 +48,7 @@ export class AuthService {
           
             {
                 id: userDto.id,
-                pw: userDto.pw, // 암호화 작업 필요
+                pw: pw, // 암호화 작업 필요
                 token: uid,
                 nickname: userDto.nickname,
                 perm: userDto.perm,
@@ -73,6 +75,9 @@ export class AuthService {
     }
     async updateInfo(token: string) {}
 
+    async comparePassword(password: string, hashed: string) {
+        return await bcrypt.compare(password, hashed);
+    }
     async loginUser(id: string, pw: string, token: string) {
         return Result.success;
     }
