@@ -11,9 +11,9 @@ export class SessionDto {
 
     @IsString()
     @IsNotEmpty()
-    readonly token: string;
+    token: string;
 
     @IsDate()
     @IsNotEmpty()
-    readonly createdAt: Date;
+    createdAt: Date;
 }
