@@ -98,7 +98,7 @@ export class AuthService {
     }
 
     async deleteSession(sessionId: string) {
-        await this.dataService.db.collection("sessions").deleteOne({ sessionId }); 
+        await this.dataService.db.collection(env.SESSION_DB_NAME).deleteOne({ sessionId }); 
     }
     
 }
