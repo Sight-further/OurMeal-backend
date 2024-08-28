@@ -10,8 +10,12 @@ export class UserDto {
   pw: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   token: string;
+
+  @IsString()
+  @IsNotEmpty()
+  nickname: string;
 
   @IsNumber()
   @IsNotEmpty()
