@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { Neis, SchoolInfoResponse } from 'neis.ts';
+import { Neis } from 'neis.ts';
 import { config } from 'dotenv'; config();
 
 const env = process.env
