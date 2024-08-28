@@ -1,6 +1,9 @@
 import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class UserDto {
+  @IsOptional()
+  _id: ObjectId;
   @IsString()
   @IsNotEmpty()
   id: string;
