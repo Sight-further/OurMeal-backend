@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 export class SessionDto {
     @IsOptional()
-    _id: ObjectId;
+    _id?: ObjectId;
 
     @IsString()
     @IsNotEmpty()
