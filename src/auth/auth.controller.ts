@@ -65,4 +65,9 @@ export class AuthController {
             return {status: "failed"}
        })
     }
+
+    @Get('getUserToken') // 서버용
+    async getUserToken(@Query('id') id) {
+        return {id: await this.authService.getTokenById(id)}
+    }
 }
