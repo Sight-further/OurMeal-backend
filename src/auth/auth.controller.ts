@@ -58,8 +58,8 @@ export class AuthController {
     }
 
     @Get('updateSchool')
-    async updateSchool(@Query('token') token, @Query('school') school) {
-       await this.dataService.upsertOne({token: token}, {school: school}).then(() => {
+    async updateSchool(@Query('nickname') nickname, @Query('school') school) {
+       await this.dataService.upsertOne({nickname: nickname}, {school: school}).then(() => {
             return {status: "success"}
        }).catch(() => {
             return {status: "failed"}
