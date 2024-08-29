@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { UserDto } from './dto/user.dto';
+import { UserDto } from './dto/user.dto'; import { DataService } from './db/data.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService, private readonly dataService: DataService) {}
 
     @Get('signin') //loginUserCheck에서 available이면 실행
     async login(@Query('id') id: string, @Query('pw') pw: string, @Query('userToken') tkn: string, @Query('redirect') red, @Res() res: Response) {
@@ -55,5 +55,14 @@ export class AuthController {
                 return {exist: false};
             }
         }
+    }
+
+    @Get('updateSchool')
+    async updateSchool(@Query('token') token, @Query('school') school) {
+       await this.dataService.upsertOne({token: token}, {school: school}).then(() => {
+            return {status: "success"}
+       }).catch(() => {
+            return {status: "failed"}
+       })
     }
 }
