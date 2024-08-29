@@ -62,11 +62,21 @@ export class AuthService {
         })
     }
 
+    async getUser(id: string, pw: string) {
+        if (await this.getTokenById(id) == null) {
+            return false
+        }
+        return await this.comparePassword(pw, (await this.getUserBytoken(await this.getTokenById(id))).pw)
+    }
+
     async getUserBytoken(token: string) {
         return await this.dataService.findOne({token: token});
     }
 
-    async getTokenById(id: string) { 
+    async getTokenById(id: string) {
+        if (await this.dataService.findOne({id: id}) == null) {
+            return null;
+        }
         return (await this.dataService.findOne({id: id})).token;
     }
 
@@ -76,6 +86,9 @@ export class AuthService {
     async updateInfo(token: string) {}
 
     async comparePassword(password: string, hashed: string) {
+        if (hashed == null || password == null) {
+            return false;
+        }
         return await bcrypt.compare(password, hashed);
     }
     async loginUser(id: string, pw: string, token: string) {
