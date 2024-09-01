@@ -14,7 +14,7 @@ export class MealsController {
       pSize: 50,
     });
 
-    const schoolNames: [string, string][] = [];
+    const schoolNames: [string, string, string][] = [];
 
     await neis
       .getSchool({
@@ -22,7 +22,7 @@ export class MealsController {
       })
       .then((res) => {
         for (const value of res.values()) {
-            schoolNames.push([value.SCHUL_NM, value.ORG_RDNDA])
+            schoolNames.push([value.SCHUL_NM, value.ORG_RDNDA, value.SD_SCHUL_CODE])
         }
       })
       .catch((err) => {

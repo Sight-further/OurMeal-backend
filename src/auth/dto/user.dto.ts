@@ -31,5 +31,5 @@ export class UserDto {
 
   @IsString()
   @IsOptional()
-  school?: string;
+  school?: string; //근데 SD_SCHUL_CODE는 보통 number 아닌가 //오류나면 number로 바꾸기
 }

@@ -48,7 +48,7 @@ export class AuthService {
           
             {
                 id: userDto.id,
-                pw: pw, // 암호화 작업 필요
+                pw: pw, 
                 token: uid,
                 nickname: userDto.nickname,
                 perm: userDto.perm,
@@ -91,10 +91,23 @@ export class AuthService {
         }
         return await bcrypt.compare(password, hashed);
     }
-    async loginUser(id: string, pw: string, token: string) {
-        return Result.success;
+    async loginUser(id: string, pw: string) {
+        if (await this.getUser(id, pw)) {
+            const result = await this.createSession(await this.getTokenById(id));
+            return {sessionId: result}
+        } else {
+            return {sessionId: "NON_EXIST"}
+        }
     }
-    async logoutUser(token: string) {}
+
+    async logoutUser(id: string, pw: string) {
+        if (await this.getUser(id, pw)) {
+            const result = await this.deleteSession(await this.getTokenById(id));
+            return {result: Result.success};
+        } else {
+            return {result: Result.fail};
+        }
+    }
     
     async createSession(token: string): Promise<string> {
         const sessionId = uuidv4()
