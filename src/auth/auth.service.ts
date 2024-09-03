@@ -43,7 +43,7 @@ export class AuthService {
         const pw = await bcrypt.hash(userDto.pw as string, 10)
         await this.dataService.upsertOne(
             {
-                nickname: userDto
+                nickname: userDto.nickname
             },
           
             {
