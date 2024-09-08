@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
 export class UserDto {
@@ -26,10 +26,10 @@ export class UserDto {
   perm: number;
 
   @IsString()
-  @IsOptional()
-  email?: string;
-
   @IsString()
+  email: string;
+
+  @IsArray()
   @IsOptional()
-  school?: string; //근데 SD_SCHUL_CODE는 보통 number 아닌가 //오류나면 number로 바꾸기
+  editorAt?: Array<string>;
 }
