@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Query, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { UserDto } from './dto/user.dto'; import { DataService } from './db/data.service';
 
 @Controller('auth')
@@ -8,8 +8,14 @@ export class AuthController {
     constructor(private readonly authService: AuthService, private readonly dataService: DataService) {}
 
     @Get('signin') //loginUserCheck에서 available이면 실행
-    async login(@Query('id') id: string, @Query('pw') pw: string, @Res() res: Response) {
-        res.status(200).send(await this.authService.loginUser(id, pw));
+    async login(@Query('id') id: string, @Query('pw') pw: string, @Req() req: Request, @Res() res: Response) {
+        if (await this.authService.getSession(req.cookies["SESSION_ID"]) == null || req.cookies["SESSION_ID"] == null) {
+            const sessionId = await this.authService.loginUser(id, pw);
+            res.cookie('SESSION_ID', sessionId);
+            res.status(200).send("success. redirecting to the main page..");
+        } else {
+            res.status(200).send({status: `logged in already: ${(await this.authService.getUserBytoken(await this.authService.getTokenById(id))).nickname}`})
+        }
     }
 
     @Get('signinUserCheck') //서버용
@@ -22,9 +28,15 @@ export class AuthController {
     }
 
     @Get('signout')
-    async logout(@Query('id') id, @Query('pw') pw, @Query('redirect') red, @Res() res: Response) {
-        const result = await this.authService.logoutUser(id, pw)
-        res.status(200).send(result)
+    async logout(@Query('id') id, @Query('pw') pw, @Query('redirect') red, @Req() req: Request, @Res() res: Response) {
+        const sessionId = req.cookies['SESSION_ID'];
+        if (sessionId == null) {
+            const result = await this.authService.logoutUser(id, pw);
+            res.status(200).send(result);
+            res.clearCookie("SESSION_ID")
+        } else {
+
+        }
     }
 
     @Get('createUser') // 서버용
