@@ -53,7 +53,7 @@ export class AuthService {
                 nickname: userDto.nickname,
                 perm: userDto.perm,
                 email: userDto.email || "null yet",
-                editorAt: userDto.editorAt || []
+                school: userDto.school || "null yet"
             }
         ).then(() => {
             return Result.success;
