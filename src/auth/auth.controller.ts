@@ -8,11 +8,8 @@ export class AuthController {
     constructor(private readonly authService: AuthService, private readonly dataService: DataService) {}
 
     @Get('signin') //loginUserCheck에서 available이면 실행
-    async login(@Query('id') id: string, @Query('pw') pw: string, @Res() res: Response) {
-        const sessionId = await this.authService.loginUser(id, pw);
-        res.cookie('SESSION_ID', sessionId);
-        res.status(200).send("success. redirecting to the main page..");
-        
+     async login(@Query('id') id: string, @Query('pw') pw: string, @Res() res: Response) {
+        res.status(200).send(await this.authService.loginUser(id, pw));
     }
 
     @Get('signinUserCheck') //서버용
@@ -26,10 +23,8 @@ export class AuthController {
 
     @Get('signout')
     async logout(@Query('id') id, @Query('pw') pw, @Query('redirect') red, @Res() res: Response) {
-        const result = await this.authService.logoutUser(id, pw);
-        res.status(200).send(result);
-        res.clearCookie("SESSION_ID")
-        
+        const result = await this.authService.logoutUser(id, pw)
+        res.status(200).send(result)
     }
 
     @Get('createUser') // 서버용
